@@ -276,7 +276,7 @@ check_truenas_updates() {
       end
     ' 2>/dev/null)
     log "TrueNAS má dostupnou aktualizaci${summary:+: $summary}"
-    tg_send "⬆️ TrueNAS watchdog: je dostupná aktualizace TrueNAS${summary:+: $summary}. Nebyla spuštěna žádná instalace."
+    tg_send "⬆️ TrueNAS watchdog: je dostupná aktualizace TrueNAS${summary:+: $summary}."
   else
     log "TrueNAS nemá dostupnou aktualizaci"
   fi
