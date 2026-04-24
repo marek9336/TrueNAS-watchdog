@@ -1,0 +1,13 @@
+# Runtime logs
+logs/
+
+# Local backups
+backup/
+
+# Local configuration with private tokens and chat IDs
+truenas-watchdog.conf
+
+# Temporary/editor files
+*.tmp
+*.bak
+*~
