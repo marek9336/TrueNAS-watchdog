@@ -10,9 +10,8 @@ POLL_INTERVAL=5
 
 # HTTP healthchecks in the format "app|url|expected_http_code".
 # These run only when the app state is RUNNING.
-# HTTP_HEALTHCHECKS=(
-#   "example-app|http://127.0.0.1:8080/health|200"
-# )
-HTTP_HEALTHCHECKS=()
+HTTP_HEALTHCHECKS=(
+    "example-app|http://127.0.0.1:8080/health|200"
+)
 
-LOG_FILE="/mnt/Apps/Scripts/logs/truenas-watchdog.log"
+LOG_FILE="/mnt/POOLNAME/Scripts/logs/truenas-watchdog.log"

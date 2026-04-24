@@ -18,13 +18,13 @@ Ignorované jsou také složky `logs/` a `backup/`.
 Na TrueNAS umísti soubory např. do:
 
 ```bash
-/mnt/Apps/Scripts
+/mnt/POOLNAME/Scripts
 ```
 
 Vytvoř lokální konfiguraci z template:
 
 ```bash
-cp /mnt/Apps/Scripts/truenas-watchdog.conf.template /mnt/Apps/Scripts/truenas-watchdog.conf
+cp /mnt/POOLNAME/Scripts/truenas-watchdog.conf.template /mnt/POOLNAME/Scripts/truenas-watchdog.conf
 ```
 
 Pak uprav `truenas-watchdog.conf`:
@@ -48,25 +48,25 @@ HTTP_HEALTHCHECKS=(
 Kontrola aplikací:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh check
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh check
 ```
 
 Kontrola dostupných aktualizací aplikací a TrueNASu bez instalace:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh update
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh update
 ```
 
 Kontrola zdraví TrueNASu:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh truenas-health
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh truenas-health
 ```
 
 Skutečný update aplikací je oddělený a spouští se jen explicitně:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh app-update
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh app-update
 ```
 
 ## Cron v TrueNAS
@@ -77,25 +77,25 @@ příkladové úlohy.
 Kontrola aplikací každých 5 minut:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh check >/dev/null 2>&1
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh check >/dev/null 2>&1
 ```
 
 Kontrola aktualizací např. jednou denně:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh update >/dev/null 2>&1
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh update >/dev/null 2>&1
 ```
 
 Kontrola zdraví TrueNASu např. jednou za hodinu:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh truenas-health >/dev/null 2>&1
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh truenas-health >/dev/null 2>&1
 ```
 
 Pro debug můžeš výstup dočasně přesměrovat do samostatného logu:
 
 ```bash
-/usr/bin/bash /mnt/Apps/Scripts/truenas-app-watchdog.sh check >> /mnt/Apps/Scripts/logs/truenas-watchdog-cron.log 2>&1
+/usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh check >> /mnt/POOLNAME/Scripts/logs/truenas-watchdog-cron.log 2>&1
 ```
 
 ## Poznámky
