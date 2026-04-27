@@ -2,8 +2,8 @@
 
 Bash watchdog pro TrueNAS SCALE aplikace. Kontroluje, zda vybrané aplikace běží,
 umí je zkusit znovu spustit, volitelně kontroluje HTTP healthchecky, reportuje
-dostupné aktualizace aplikací/TrueNAS bez instalace a umí poslat Telegram
-upozornění při problému.
+dostupné aktualizace aplikací/TrueNAS bez instalace, umí explicitně aktualizovat
+jen aplikace a posílá Telegram upozornění při problému.
 
 ## Bezpečnost
 
@@ -69,6 +69,10 @@ Skutečný update aplikací je oddělený a spouští se jen explicitně:
 /usr/bin/bash /mnt/POOLNAME/Scripts/truenas-app-watchdog.sh app-update
 ```
 
+Režim `app-update` aktualizuje pouze aplikace z `APPS`. TrueNAS samotný nikdy
+neaktualizuje; režim `update` na něj jen pošle upozornění, pokud najde novou
+verzi.
+
 ## Cron v TrueNAS
 
 V TrueNAS UI otevři `System Settings` -> `Advanced` -> `Cron Jobs` a přidej
@@ -103,3 +107,8 @@ Pro debug můžeš výstup dočasně přesměrovat do samostatného logu:
 `START_WAIT` je maximální doba čekání na náběh aplikace. Skript během čekání
 polluje stav podle `POLL_INTERVAL` a pokračuje hned, jakmile aplikace přejde do
 stavu `RUNNING`.
+
+`UPDATE_SETTLE_WAIT` je krátká pauza po vyžádání aktualizace aplikace. Teprve
+potom skript čeká na update job a kontroluje, zda aplikace znovu běží. Pokud po
+update nenaběhne do `START_WAIT`, skript vyžádá ruční start a pokračuje na další
+aplikaci.

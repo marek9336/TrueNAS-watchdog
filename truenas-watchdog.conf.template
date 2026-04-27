@@ -8,6 +8,9 @@ APPS=("immich" "joplin" "linkwarden" )
 START_WAIT=600
 POLL_INTERVAL=5
 
+# Delay after requesting an app update before checking the update job/state.
+UPDATE_SETTLE_WAIT=30
+
 # HTTP healthchecks in the format "app|url|expected_http_code".
 # These run only when the app state is RUNNING.
 HTTP_HEALTHCHECKS=(

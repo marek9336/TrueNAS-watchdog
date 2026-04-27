@@ -20,6 +20,7 @@ BASENAME="/usr/bin/basename"
 
 MODE="${1:-check}"   # check | update | app-update | truenas-health
 POLL_INTERVAL="${POLL_INTERVAL:-5}"
+UPDATE_SETTLE_WAIT="${UPDATE_SETTLE_WAIT:-30}"
 if ! declare -p HTTP_HEALTHCHECKS >/dev/null 2>&1; then
   HTTP_HEALTHCHECKS=()
 fi
@@ -167,6 +168,24 @@ start_app() {
   fi
 }
 
+request_start_app() {
+  local app="$1"
+  log "Zkouším vyžádat ruční start app: $app"
+
+  local job_id
+  job_id=$($MIDCLT call app.start "$app" 2>/dev/null | tr -d '\n')
+
+  if [[ ! "$job_id" =~ ^[0-9]+$ ]]; then
+    log "Nepodařilo se získat job ID pro ruční start app $app"
+    tg_send "⚠️ TrueNAS watchdog: nepodařilo se vyžádat ruční start app '$app' po update."
+    return 1
+  fi
+
+  log "Ruční start app $app vyžádán jako job $job_id, pokračuji na další aplikaci"
+  tg_send "⚠️ TrueNAS watchdog: app '$app' po update nenaběhla do ${START_WAIT}s. Ruční start byl vyžádán, pokračuji na další aplikaci."
+  return 0
+}
+
 upgrade_app() {
   local app="$1"
   log "Provádím update app: $app"
@@ -180,13 +199,16 @@ upgrade_app() {
     return 1
   fi
 
+  log "Update app $app vyžádán jako job $job_id, čekám ${UPDATE_SETTLE_WAIT}s před další kontrolou"
+  $SLEEP "$UPDATE_SETTLE_WAIT"
+
   if ! wait_for_job "$job_id"; then
     log "Update job pro $app skončil chybou"
     tg_send "❌ TrueNAS watchdog: update app '$app' skončil chybou."
     return 1
   fi
 
-  log "Update job dokončen pro $app, čekám na náběh max ${START_WAIT}s"
+  log "Kontroluji náběh app $app po update, čekám max ${START_WAIT}s"
 
   if wait_for_app_running "$app"; then
     log "App $app po update běží"
@@ -195,9 +217,8 @@ upgrade_app() {
   else
     local state
     state=$(get_app_state "$app")
-    log "App $app po update neběží. Stav: $state. Zkouším ruční start."
-    tg_send "⚠️ TrueNAS watchdog: app '$app' po update nenaběhla (stav: $state). Zkouším ruční spuštění."
-    start_app "$app"
+    log "App $app po update neběží. Stav: $state. Zkouším vyžádat ruční start a pokračuji dál."
+    request_start_app "$app"
     return $?
   fi
 }
